@@ -223,7 +223,6 @@
 
     - name: Secure MariaDB/MySQL
       mysql_secure_installation:
-        no_log: True
         login_password: ''
         new_password: "{{ mariadb_root_password }}"
         user: root
@@ -234,6 +233,7 @@
         disallow_root_login_remotely: true
         remove_test_db: true
       register: mysql_secure
+      no_log: True
 
     - name: Configure MariaDB for Guacamole
       community.mysql.mysql_query:
