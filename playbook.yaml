@@ -119,8 +119,16 @@
     - name: Unarchive guacamole-auth-jdbc
       unarchive:
         src: /tmp/guacamole-auth-jdbc-{{ guac_ver }}.tar.gz
-        dest: /usr/share/tomcat9/.guacamole/extensions/
+        dest: /tmp/
         remote_src: yes
+
+    - name: Copy guacamole-auth-jdbc to tomcat9 extenion folder
+      copy:
+        src: /tmp/guacamole-auth-jdbc-{{ guac_ver }}/mysql/guacamole-auth-jdbc-mysql-{{ guac_ver }}.jar
+        dest: /usr/share/tomcat9/.guacamole/extensions/
+        owner: tomcat9
+        group: tomcat9
+        mode: '0744'
 
     - name: Download Guacamole Web App and verify checksum (sha256)
       get_url:
