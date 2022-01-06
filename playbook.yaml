@@ -1,0 +1,294 @@
+# Configure a RHEL 8 / Rocky Linux 8 Guacamole Server
+# Dependencies: 
+# epel-release
+# ansible
+# curl https://raw.githubusercontent.com/eslam-gomaa/mysql_secure_installation_Ansible/master/library/mysql_secure_installation.py > library/mysql_secure_installation.py
+# ansible-galaxy collection install community.mysql community.general ansible.posix
+
+---
+- hosts: localhost
+  become: yes
+
+  vars:
+    #Replace these variables
+    mariadb_root_password: "mariapass123"
+    guac_db_pass: 'guacpass123'
+    #Do not edit unless you intend to install a newer guacamole release
+    guac_ver: "1.4.0"
+
+  tasks:
+    - name: Set Hostname
+      hostname:
+        name: "guac"
+
+    - name: Import RPM Fusion (Free) GPG key
+      rpm_key:
+        key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-el-8"
+        state: present
+
+    - name: Install RPM Fusion (Free) Repo
+      yum:
+        name: "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-8.noarch.rpm"
+        state: present
+
+    - name: Import Harbottle GPG key
+      rpm_key:
+        key: "https://copr-be.cloud.fedoraproject.org/results/harbottle/main/pubkey.gpg"
+        state: present
+
+    - name: Install Harbottle Repo
+      yum:
+        name: "https://harbottle.gitlab.io/harbottle-main/8/x86_64/harbottle-main-release.rpm"
+        state: present
+
+    - name: Enable PowerTools and Devel Repos 
+      shell:
+        cmd: dnf config-manager --set-enabled powertools devel
+
+    - name: Update system
+      yum: 
+        name: '*'
+        state: latest
+
+    - name: Install Dependencies
+      yum:
+        name:
+          - make
+          - policycoreutils-python-utils
+          - python3-PyMySQL
+          - cairo-devel
+          - libjpeg-turbo-devel
+          - libwebsockets-devel
+          - libpng-devel
+          - uuid-devel
+          - ffmpeg-devel
+          - freerdp-devel
+          - pango-devel
+          - libssh2-devel
+          - libvncserver-devel
+          - libgcrypt-devel
+          - pulseaudio-libs-devel
+          - openssl-devel
+          - libvorbis-devel 
+          - libwebp-devel 
+          - libtool 
+          - libuv-devel 
+          - freerdp
+          - mariadb-server
+          - wget
+          - pkgconfig
+          - libtelnet
+          - libtelnet-devel
+          - tomcat9
+        state: present
+
+    - name: Open Firewall for Guacamole/Tomcat on 8080/TCP
+      firewalld:
+        port: 8080/tcp
+        permanent: yes
+        state: enabled
+        immediate: yes
+
+    - name: Create the guac extensions, lib, and pref directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: u+r,g-r,o-rwx
+      loop:
+        - /usr/share/tomcat9/.guacamole/extensions
+        - /usr/share/tomcat9/.guacamole/lib
+        - /etc/guacamole/
+
+    - name: Download MariaDB Java Connector and verify checksum (sha256)
+      get_url:
+        url: https://downloads.mariadb.com/Connectors/java/connector-java-2.7.3/mariadb-java-client-2.7.3.jar
+        dest: /usr/share/tomcat9/.guacamole/lib/
+        checksum: sha256:https://downloads.mariadb.com/Connectors/java/connector-java-2.7.3/sha256sums.txt
+
+    - name: Download guacamole-auth-jdbc extension and verify checksum (sha256)
+      get_url:
+        url: https://apache.org/dyn/closer.lua/guacamole/{{ guac_ver }}/binary/guacamole-auth-jdbc-{{ guac_ver }}.tar.gz?action=download
+        dest: /tmp/
+        checksum: sha256:https://downloads.apache.org/guacamole/{{ guac_ver }}/binary/guacamole-auth-jdbc-{{ guac_ver }}.tar.gz.sha256
+
+    - name: Unarchive guacamole-auth-jdbc
+      unarchive:
+        src: /tmp/guacamole-auth-jdbc-{{ guac_ver }}.tar.gz
+        dest: /usr/share/tomcat9/.guacamole/extensions/
+        remote_src: yes
+
+    - name: Download Guacamole Web App and verify checksum (sha256)
+      get_url:
+        url: https://apache.org/dyn/closer.lua/guacamole/{{ guac_ver }}/binary/guacamole-{{ guac_ver }}.war?action=download
+        dest: /var/lib/tomcat9/webapps/guacamole.war
+        checksum: sha256:https://downloads.apache.org/guacamole/{{ guac_ver }}/binary/guacamole-{{ guac_ver }}.war.sha256
+
+    - name: Change Owner of Guacamole Web App
+      file:
+        path: /var/lib/tomcat9/webapps/guacamole.war
+        owner: tomcat9
+        group: tomcat9
+        mode: '0744'
+
+    - name: Download Guacamole Server and verify checksum (sha256)
+      get_url:
+        url: https://apache.org/dyn/closer.lua/guacamole/{{ guac_ver }}/source/guacamole-server-{{ guac_ver }}.tar.gz?action=download
+        dest: /tmp/guacamole-server-{{ guac_ver }}.tar.gz
+        checksum: sha256:https://downloads.apache.org/guacamole/{{ guac_ver }}/source/guacamole-server-{{ guac_ver }}.tar.gz.sha256
+
+    - name: Unarchive Guacamole Server Tarball
+      unarchive:
+        src: /tmp/guacamole-server-{{ guac_ver }}.tar.gz
+        dest: /tmp/
+        remote_src: yes
+
+    - name: Download Guacamole Client and verify checksum (sha256)
+      get_url:
+        url: https://apache.org/dyn/closer.lua/guacamole/{{ guac_ver }}/source/guacamole-client-{{ guac_ver }}.tar.gz?action=download
+        dest: /tmp/guacamole-client-{{ guac_ver }}.tar.gz
+        checksum: sha256:https://downloads.apache.org/guacamole/{{ guac_ver }}/source/guacamole-client-{{ guac_ver }}.tar.gz.sha256
+
+    - name: Unarchive Guacamole Client Tarball
+      unarchive:
+        src: /tmp/guacamole-client-{{ guac_ver }}.tar.gz
+        dest: /tmp/
+        remote_src: yes
+
+    - name: Configure, Make, and Install the Guacamole Server
+      shell:
+        chdir: /tmp/guacamole-server-{{ guac_ver }}
+        cmd: ./configure --with-init-dir=/etc/init.d > /tmp/configure.log
+
+    - name: Error Handler for ./configure check
+      block:
+        - name: Verify ./configure was successful  
+          lineinfile:
+            path: /tmp/configure.log
+            regexp: "{{ item }}"
+            state: absent
+          check_mode: yes
+          register: presence
+          failed_when: (presence is changed) or (presence is failed)
+          loop:
+            - '.*freerdp2 ............ no.*'
+            - '.*pango ............... no.*'
+            - '.*libavcodec .......... no.*'
+            - '.*libavformat.......... no.*'
+            - '.*libavutil ........... no.*'
+            - '.*libssh2 ............. no.*'
+            - '.*libssl .............. no.*'
+            - '.*libswscale .......... no.*'
+            - '.*libtelnet ........... no.*'
+            - '.*libVNCServer ........ no.*'
+            - '.*libvorbis ........... no.*'
+            - '.*libpulse ............ no.*'
+            - '.*libwebsockets ....... no.*'
+            - '.*libwebp ............. no.*'
+            - '.*Kubernetes .... no.*'
+            - '.*RDP ........... no.*'
+            - '.*SSH ........... no.*'
+            - '.*Telnet ........ no.*'
+            - '.*VNC ........... no.*'
+            - '.*guacd ...... no.*'
+            - '.*guacenc .... no.*'
+            - '.*guaclog .... no.*'
+      
+      rescue:
+        - debug:
+            msg: "Something went wrong with ./configure.  Check the log file located at /tmp/configure.log"
+
+    - name: Build the default target
+      community.general.make:
+        chdir: /tmp/guacamole-server-{{ guac_ver }}
+
+    - name: Run 'install' target as root
+      community.general.make:
+        chdir: /tmp/guacamole-server-{{ guac_ver }}
+        target: install
+
+    - name: Configure Tomcat9, MariaDB, and GuacD
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - "tomcat9"
+        - "mariadb"
+        - "guacd"
+    
+# The following tasks ensure MariaDB/MySQL is secure, see the below for reference
+# https://github.com/eslam-gomaa/mysql_secure_installation_Ansible  
+
+    - name: Secure MariaDB/MySQL
+      mysql_secure_installation:
+        no_log: True
+        login_password: ''
+        new_password: "{{ mariadb_root_password }}"
+        user: root
+        login_host: localhost
+        hosts: ['localhost', '127.0.0.1', '::1']
+        change_root_password: true
+        remove_anonymous_user: true
+        disallow_root_login_remotely: true
+        remove_test_db: true
+      register: mysql_secure
+
+    - name: Configure MariaDB for Guacamole
+      community.mysql.mysql_query:
+        login_user: root
+        login_password: "{{ mariadb_root_password }}"
+        query:
+          - CREATE DATABASE IF NOT EXISTS guacdb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+          - GRANT SELECT,INSERT,UPDATE,DELETE ON guacdb.* TO 'guacuser'@'localhost' IDENTIFIED BY '{{ guac_db_pass }}' WITH GRANT OPTION;
+          - flush privileges;
+
+    - name: Import Guacamole DB Schema
+      community.mysql.mysql_db:
+        login_user: root
+        login_password: "{{ mariadb_root_password }}"
+        state: import
+        name: guacdb
+        force: yes
+        target: /tmp/guacamole-client-{{ guac_ver }}/extensions/guacamole-auth-jdbc/modules/guacamole-auth-jdbc-mysql/schema/{{ item }}
+      loop:
+        - "001-create-schema.sql"
+        - "002-create-admin-user.sql"
+
+    - name: Create Guacamole Properties File
+      copy:
+        dest: "/etc/guacamole/guacamole.properties"
+        content: |
+          MySQL properties
+          mysql-hostname: localhost
+          mysql-port: 3306
+          mysql-database: guacdb
+          mysql-username: guacuser
+          mysql-password: {{ guac_db_pass }}
+          Additional settings
+          mysql-driver: mariadb
+          mysql-default-max-connections-per-user: 0
+          mysql-default-max-group-connections-per-user: 0
+
+    - name: Secure the properties file
+      file:
+        path: /etc/guacamole/guacamole.properties
+        owner: tomcat9
+        group: tomcat9
+        mode: '0400'
+
+    - name: Create a symbolic link to guacamole.properties
+      file:
+        src: /etc/guacamole/guacamole.properties
+        dest: /usr/share/tomcat9/.guacamole/guacamole.properties
+        owner: tomcat9
+        group: tomcat9
+        state: link
+
+    - name: Inform SELinux to permit Tomcat to connect to MariaDB
+      ansible.posix.seboolean:
+        name: tomcat_can_network_connect_db
+        state: yes
+        persistent: yes
+
+    - name: Set SELinux Context for MariaDB Java Client
+      command: restorecon -R -v /usr/share/tomcat9/.guacamole/lib/mariadb-java-client-2.7.3.jar
