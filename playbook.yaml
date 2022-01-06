@@ -45,6 +45,7 @@
     - name: Enable PowerTools and Devel Repos 
       shell:
         cmd: dnf config-manager --set-enabled powertools devel
+        warn: false
 
     - name: Update system
       yum: 
