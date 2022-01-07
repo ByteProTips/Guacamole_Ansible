@@ -110,7 +110,7 @@
           - libtelnet-devel
           - tomcat9
         state: present
-      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8"
+      when: ansible_os_family == "RedHat"
 
     - name: Open Firewall for Guacamole/Tomcat on 8080/TCP
       firewalld:
