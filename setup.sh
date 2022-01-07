@@ -8,7 +8,7 @@ if grep -q -i "release 8" /etc/redhat-release
 then
 	subscription-manager repos --enable codeready-builder-for-rhel-8-$(arch)-rpms
 	dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-	dnf --enablerepo=epel --setopt=epel.module_hotfixes=true install libssh2-1.9.0
+	dnf --enablerepo=epel --setopt=epel.module_hotfixes=true install -y libssh2 libssh2-devel
 fi
 
 if grep -q -i "release 7" /etc/redhat-release
