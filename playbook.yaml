@@ -1,11 +1,6 @@
-# Created by ByteProTips
-# Configure a RHEL 8 / Rocky Linux 8 Guacamole Server
-# Dependencies: 
-# epel-release
-# ansible
-# curl https://raw.githubusercontent.com/eslam-gomaa/mysql_secure_installation_Ansible/master/library/mysql_secure_installation.py > library/mysql_secure_installation.py
-# ansible-galaxy collection install community.mysql community.general ansible.posix
-
+# Configure Apache Guacamole on RHEL/CentOS/Rocky Linux (supports major distro v7 and v8)
+# Created by ByteProTips (www.byteprotips.com)
+# Tested on CentOS 7, Rocky Linux 8, 
 ---
 - hosts: localhost
   become: yes
@@ -119,7 +114,9 @@
 
     - name: Install EL7 specific Dependencies
       yum:
-        name: policycoreutils-python
+        name: 
+          - policycoreutils-python
+          - python2-PyMySQL
         state: present
       when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
 
