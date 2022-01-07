@@ -22,17 +22,30 @@
       hostname:
         name: "guac"
 
-    - name: Import RPM Fusion (Free) GPG key
+    - name: Import RPM Fusion (Free) GPG key for EL8
       rpm_key:
         key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-el-8"
         state: present
       when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8"
 
-    - name: Install RPM Fusion (Free) Repo
+    - name: Install RPM Fusion (Free) Repo for EL8
       yum:
         name: "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-8.noarch.rpm"
         state: present
-      when: ansible_os_family == "RedHat"
+      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8"
+
+    - name: Import RPM Fusion (Free) GPG key for EL7
+      rpm_key:
+        key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-el-7"
+        state: present
+      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+    - name: Install RPM Fusion (Free) Repo for EL7
+      yum:
+        name: "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm"
+        state: present
+      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
 
     - name: Import Harbottle GPG key
       rpm_key:
