@@ -26,31 +26,39 @@
       rpm_key:
         key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-el-8"
         state: present
+        when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8"
 
     - name: Install RPM Fusion (Free) Repo
       yum:
         name: "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-8.noarch.rpm"
         state: present
+        when: ansible_os_family == "RedHat"
 
     - name: Import Harbottle GPG key
       rpm_key:
         key: "https://copr-be.cloud.fedoraproject.org/results/harbottle/main/pubkey.gpg"
         state: present
+        when: ansible_os_family == "RedHat" and 
+              (ansible_distribution_major_version == "7" or ansible_distribution_major_version == "8")
 
     - name: Install Harbottle Repo
       yum:
         name: "https://harbottle.gitlab.io/harbottle-main/8/x86_64/harbottle-main-release.rpm"
         state: present
+        when: ansible_os_family == "RedHat" and 
+              (ansible_distribution_major_version == "7" or ansible_distribution_major_version == "8")
 
     - name: Enable PowerTools and Devel Repos 
       shell:
         cmd: dnf config-manager --set-enabled powertools devel
         warn: false
+      when: ansible_os_family == "RedHat"
 
     - name: Update system
       yum: 
         name: '*'
         state: latest
+      when: ansible_os_family == "RedHat"
 
     - name: Install Dependencies
       yum:
@@ -84,6 +92,7 @@
           - libtelnet-devel
           - tomcat9
         state: present
+      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8"
 
     - name: Open Firewall for Guacamole/Tomcat on 8080/TCP
       firewalld:
@@ -306,3 +315,8 @@
 
     - name: Set SELinux Context for MariaDB Java Client
       command: restorecon -R -v /usr/share/tomcat9/.guacamole/lib/mariadb-java-client-2.7.3.jar
+
+    - name: Restart Tomcat
+      service:
+        name: tomcat9
+        state: restarted
