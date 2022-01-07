@@ -83,7 +83,6 @@
         name:
           - make
           - rsyslog
-          - policycoreutils-python-utils
           - python3-PyMySQL
           - cairo-devel
           - libjpeg-turbo-devel
@@ -111,6 +110,18 @@
           - tomcat9
         state: present
       when: ansible_os_family == "RedHat"
+
+    - name: Install EL8 specific Dependencies
+      dnf:
+        name: policycoreutils-python-utils
+        state: present
+      where: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8"
+
+    - name: Install EL7 specific Dependencies
+      yum:
+        name: policycoreutils-python
+        state: present
+      where: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
 
     - name: Open Firewall for Guacamole/Tomcat on 8080/TCP
       firewalld:
