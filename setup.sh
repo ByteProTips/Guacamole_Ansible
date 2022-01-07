@@ -17,10 +17,9 @@ then
 	                           --enable rhel-ha-for-rhel-*-server-rpms
 	yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 fi
-else
-	yum install -y epel-release
-	yum install -y ansible
-fi
+
+yum install -y epel-release
+yum install -y ansible
 
 ansible-galaxy collection install community.mysql community.general ansible.posix
 
