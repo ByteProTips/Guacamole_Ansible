@@ -1,14 +1,20 @@
-# Configure Apache Guacamole on RHEL/CentOS/Rocky Linux (supports major distro v7 and v8)
+# Configure Apache Guacamole on RHEL/CentOS/Rocky Linux (supports EL major distros v7 and v8)
 # Created by ByteProTips (www.byteprotips.com)
-# Tested on CentOS 7, Rocky Linux 8, 
+# Tested on CentOS 7, Rocky Linux 8, RHEL 8
 ---
 - hosts: localhost
   become: yes
 
+  vars_prompt:
+    - name: mariadb_root_password
+      prompt: What would you like your MariaDB/MySQL root password to be?
+      confirm: yes
+
+    - name: guac_db_pass
+      prompt: What password would you like GuacD to use to access MariaDB/MySQL?
+      confirm: yes
+
   vars:
-    #Replace these variables
-    mariadb_root_password: "mariapass123"
-    guac_db_pass: 'guacpass123'
     #Do not edit unless you intend to install a newer guacamole release
     guac_ver: "1.4.0"
 
