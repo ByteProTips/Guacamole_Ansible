@@ -15,7 +15,7 @@ then
 fi
 
 #Prep RHEL 7
-if [[ `grep -q -i "release 8" /etc/redhat-release` ]] && [[ grep -q -i -e '^Red Hat.*release.*' /etc/redhat-release ]]
+if [[ grep -q -i "release 8" /etc/redhat-release ]] && [[ grep -q -i -e '^Red Hat.*release.*' /etc/redhat-release ]]
 then
 	subscription-manager repos --enable rhel-*-optional-rpms \
 	                           --enable rhel-*-extras-rpms \
