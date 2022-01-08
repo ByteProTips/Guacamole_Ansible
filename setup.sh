@@ -8,14 +8,14 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 curl https://raw.githubusercontent.com/eslam-gomaa/mysql_secure_installation_Ansible/master/library/mysql_secure_installation.py > $SCRIPT_DIR/library/mysql_secure_installation.py
 
 #Prep CentOS 7
-if [grep -q -i "release 7" /etc/centos-release]
+if grep -q -i "release 7" /etc/centos-release
 then
 	yum install -y epel-release
 	yum install -y ansible
 fi
 
 #Prep CentOS 8
-if [grep -q -i "release 8" /etc/centos-release]
+if grep -q -i "release 8" /etc/centos-release
 then
 	dnf install -y epel-release
 	dnf install -y ansible
