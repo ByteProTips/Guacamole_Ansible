@@ -1,0 +1,60 @@
+# Perform CentOS 7 specific setup tasks
+---
+- name: Import RPM Fusion (Free) GPG key for EL7
+  rpm_key:
+    key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-el-7"
+    state: present
+
+- name: Install RPM Fusion (Free) Repo for EL7
+  package:
+    name: "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm"
+    state: present
+
+- name: Import Harbottle GPG key
+  rpm_key:
+    key: "https://copr-be.cloud.fedoraproject.org/results/harbottle/main/pubkey.gpg"
+    state: present
+
+- name: Install Harbottle Repo for EL7
+  package:
+    name: "https://harbottle.gitlab.io/harbottle-main/7/x86_64/harbottle-main-release.rpm"
+    state: present
+
+- name: Update system packages
+      package: 
+        name: '*'
+        state: latest
+
+- name: Install Dependencies
+  package:
+    name:
+      - make
+      - rsyslog
+      - python3-PyMySQL
+      - cairo-devel
+      - libjpeg-turbo-devel
+      - libwebsockets-devel
+      - libpng-devel
+      - uuid-devel
+      - ffmpeg-devel
+      - freerdp-devel
+      - pango-devel
+      - libssh2-devel
+      - libvncserver-devel
+      - libgcrypt-devel
+      - pulseaudio-libs-devel
+      - openssl-devel
+      - libvorbis-devel 
+      - libwebp-devel 
+      - libtool 
+      - libuv-devel 
+      - freerdp
+      - mariadb-server
+      - wget
+      - pkgconfig
+      - libtelnet
+      - libtelnet-devel
+      - tomcat9
+      - policycoreutils-python
+      - python2-PyMySQL
+    state: present

@@ -1,6 +1,6 @@
-# Configure Apache Guacamole on RHEL/CentOS/Rocky Linux (supports EL major distros v7 and v8)
+# Configure Apache Guacamole
 # Created by ByteProTips (www.byteprotips.com)
-# Tested on CentOS 7, Rocky Linux 8, RHEL 8
+# Tested on CentOS 7
 ---
 - hosts: localhost
   become: yes
@@ -23,108 +23,24 @@
       hostname:
         name: "guac"
 
-    - name: Import RPM Fusion (Free) GPG key for EL8
-      rpm_key:
-        key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-el-8"
-        state: present
-      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8"
+#-- OS Specific Tasks --
+    - name: Perform CentOS 7, Springdale 7, Oracle 7 etc. Specific Tasks
+      include_tasks: centos7.yaml
+      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7" and ansible_distribution != "RedHat"
 
-    - name: Install RPM Fusion (Free) Repo for EL8
-      yum:
-        name: "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-8.noarch.rpm"
-        state: present
-      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8"
+    - name: Perform RHEL 7 Specific Tasks
+      include_tasks: rhel7.yaml
+      when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == "7"
 
-    - name: Import RPM Fusion (Free) GPG key for EL7
-      rpm_key:
-        key: "https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-el-7"
-        state: present
-      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
-
-    - name: Install RPM Fusion (Free) Repo for EL7
-      yum:
-        name: "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm"
-        state: present
-      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
-
-
-    - name: Import Harbottle GPG key
-      rpm_key:
-        key: "https://copr-be.cloud.fedoraproject.org/results/harbottle/main/pubkey.gpg"
-        state: present
-      when: ansible_os_family == "RedHat" and 
-            (ansible_distribution_major_version == "7" or ansible_distribution_major_version == "8")
-
-    - name: Install Harbottle Repo for EL8
-      yum:
-        name: "https://harbottle.gitlab.io/harbottle-main/8/x86_64/harbottle-main-release.rpm"
-        state: present
-      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8"
-
-    - name: Install Harbottle Repo for EL7
-      yum:
-        name: "https://harbottle.gitlab.io/harbottle-main/7/x86_64/harbottle-main-release.rpm"
-        state: present
-      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
-
-    - name: Enable PowerTools and Devel Repos 
-      shell:
-        cmd: dnf config-manager --set-enabled powertools devel
-        warn: false
+    - name: Performing v8 of CentOS, Rocky Linux, Oracle Linux, etc. Specific Tasks (but not RHEL 8)
+      include_tasks: centos8.yaml
       when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8" and ansible_distribution != "RedHat"
 
-    - name: Update system
-      yum: 
-        name: '*'
-        state: latest
-      when: ansible_os_family == "RedHat"
+    - name: Perform RHEL 8 Specific Tasks
+      include_tasks: rhel8.yaml
+      when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == "8"
 
-    - name: Install Dependencies
-      yum:
-        name:
-          - make
-          - rsyslog
-          - python3-PyMySQL
-          - cairo-devel
-          - libjpeg-turbo-devel
-          - libwebsockets-devel
-          - libpng-devel
-          - uuid-devel
-          - ffmpeg-devel
-          - freerdp-devel
-          - pango-devel
-          - libssh2-devel
-          - libvncserver-devel
-          - libgcrypt-devel
-          - pulseaudio-libs-devel
-          - openssl-devel
-          - libvorbis-devel 
-          - libwebp-devel 
-          - libtool 
-          - libuv-devel 
-          - freerdp
-          - mariadb-server
-          - wget
-          - pkgconfig
-          - libtelnet
-          - libtelnet-devel
-          - tomcat9
-        state: present
-      when: ansible_os_family == "RedHat"
-
-    - name: Install EL8 specific Dependencies
-      dnf:
-        name: policycoreutils-python-utils
-        state: present
-      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8"
-
-    - name: Install EL7 specific Dependencies
-      yum:
-        name: 
-          - policycoreutils-python
-          - python2-PyMySQL
-        state: present
-      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+#-- End OS Specific Tasks --
 
     - name: Open Firewall for Guacamole/Tomcat on 8080/TCP
       firewalld:
