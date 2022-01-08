@@ -14,15 +14,8 @@ then
 	yum install -y ansible
 fi
 
-#Prep CentOS 8
-if grep -q -i "release 8" /etc/centos-release
-then
-	dnf install -y epel-release
-	dnf install -y ansible
-fi
-
 #Prep RHEL 7
-if [ grep -q -i "release 8" /etc/redhat-release ] && [ grep -q -i -e '^Red Hat.*release.*' /etc/redhat-release ]
+if [[ `grep -q -i "release 8" /etc/redhat-release` ]] && [[ grep -q -i -e '^Red Hat.*release.*' /etc/redhat-release ]]
 then
 	subscription-manager repos --enable rhel-*-optional-rpms \
 	                           --enable rhel-*-extras-rpms \
@@ -31,8 +24,15 @@ then
 	yum install -y ansible
 fi
 
+#Prep CentOS 8
+if grep -q -i "release 8" /etc/centos-release
+then
+	dnf install -y epel-release
+	dnf install -y ansible
+fi
+
 #Prep RHEL 8
-if [ grep -q -i "release 8" /etc/redhat-release ] && [ grep -q -i -e '^Red Hat.*release.*' /etc/redhat-release ]
+if [[ grep -q -i "release 8" /etc/redhat-release ]] && [[ grep -q -i -e '^Red Hat.*release.*' /etc/redhat-release ]]
 then
 	subscription-manager repos --enable codeready-builder-for-rhel-8-$(arch)-rpms
 	dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
