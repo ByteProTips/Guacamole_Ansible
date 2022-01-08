@@ -25,19 +25,19 @@
 
 #-- OS Specific Tasks --
     - name: Perform CentOS 7, Springdale 7, Oracle 7 etc. Specific Tasks
-      include_tasks: centos7.yaml
+      include_tasks: os_specific_tasks/centos7.yaml
       when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7" and ansible_distribution != "RedHat"
 
     - name: Perform RHEL 7 Specific Tasks
-      include_tasks: rhel7.yaml
+      include_tasks: os_specific_tasks/rhel7.yaml
       when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == "7"
 
     - name: Performing v8 of CentOS, Rocky Linux, Oracle Linux, etc. Specific Tasks (but not RHEL 8)
-      include_tasks: centos8.yaml
+      include_tasks: os_specific_tasks/centos8.yaml
       when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8" and ansible_distribution != "RedHat"
 
     - name: Perform RHEL 8 Specific Tasks
-      include_tasks: rhel8.yaml
+      include_tasks: os_specific_tasks/rhel8.yaml
       when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == "8"
 
 #-- End OS Specific Tasks --
