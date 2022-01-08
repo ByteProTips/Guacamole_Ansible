@@ -21,9 +21,9 @@
     state: present
 
 - name: Update system packages
-      package: 
-        name: '*'
-        state: latest
+  package: 
+    name: '*'
+    state: latest
 
 - name: Install Dependencies
   package:
