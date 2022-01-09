@@ -35,7 +35,7 @@
       - libjpeg-turbo-devel
       - libwebsockets-devel
       - libpng-devel
-      - uuid-devel
+      - libuuid-devel
       - ffmpeg-devel
       - freerdp-devel
       - pango-devel
