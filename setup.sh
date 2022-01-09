@@ -45,7 +45,7 @@ then
 fi
 
 #Prep Oracle Linux 8
-if `grep -q -i "release 8" /etc/redhat-release` && `rpm -qf /etc/redhat-release | grep -q -i 'oraclelinux' /etc/redhat-release`
+if `grep -q -i "release 8" /etc/redhat-release` && $(rpm -qf /etc/redhat-release | grep -q -i 'oraclelinux' /etc/redhat-release)
 then
 	echo "Detected Oracle Linux 8"
 	dnf config-manager --set-enabled ol8_codeready_builder # For Oracle Linux
