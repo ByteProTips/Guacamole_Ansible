@@ -8,7 +8,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 curl https://raw.githubusercontent.com/eslam-gomaa/mysql_secure_installation_Ansible/master/library/mysql_secure_installation.py > $SCRIPT_DIR/library/mysql_secure_installation.py
 
 #Prep CentOS 7
-if grep -q -i "release 7" /etc/centos-release
+if grep -q -i "release 7" /etc/centos-release 2>/dev/null
 then
 	echo "Detected CentOS 7"
 	yum install -y epel-release
@@ -19,15 +19,12 @@ fi
 if `grep -q -i "release 7" /etc/redhat-release` && `grep -q -i -e '^Red Hat.*release.*' /etc/redhat-release`
 then
 	echo "Detected RHEL 7"
-	subscription-manager repos --enable rhel-*-optional-rpms \
-	                           --enable rhel-*-extras-rpms \
-	                           --enable rhel-ha-for-rhel-*-server-rpms
 	yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
 	yum install -y ansible
 fi
 
 #Prep CentOS 8
-if grep -q -i "release 8" /etc/centos-release
+if grep -q -i "release 8" /etc/centos-release 2>/dev/null
 then
 	echo "Detected CentOS 8"
 	dnf install -y epel-release
