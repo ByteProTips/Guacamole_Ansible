@@ -68,9 +68,9 @@ then
 fi
 
 #Prep Debian
-if `grep -q -i "Debian GNU" /etc/os-release 2>/dev/null`
+if `grep -q -i "ID_LIKE=debian" /etc/os-release 2>/dev/null`
 then
-	echo "Detected Debian"
+	echo "Detected Debian/Debian Like Distro"
 	apt install -y git curl ansible
 	curl https://raw.githubusercontent.com/eslam-gomaa/mysql_secure_installation_Ansible/master/library/mysql_secure_installation.py > $DIR/library/mysql_secure_installation.py
 fi
