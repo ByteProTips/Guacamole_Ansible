@@ -15,7 +15,10 @@
       - libwebsockets-dev
       - libpng-dev
       - uuid-dev
-      - ffmpeg-dev
+      - libavcodec-dev
+      - libavformat-dev
+      - libavutil-dev
+      - libswsccale-dev
       - freerdp-dev
       - pango-dev
       - libssh2-dev
