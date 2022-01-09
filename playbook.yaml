@@ -47,7 +47,7 @@
 #-- End OS Specific Tasks --
     - name: Populate service facts
       service_facts:
-        
+
     - name: Open Firewall for Guacamole/Tomcat on 8080/TCP
       firewalld:
         port: 8080/tcp
@@ -56,7 +56,7 @@
         immediate: yes
       when: "'firewalld' in services"
 
-    - name: Create the guac extensions, lib, and pref directories
+    - name: Create the guac extensions, lib, and pref directories (RedHat Family)
       file:
         path: "{{ item }}"
         state: directory
@@ -67,6 +67,20 @@
         - /usr/share/tomcat9/.guacamole/extensions
         - /usr/share/tomcat9/.guacamole/lib
         - /etc/guacamole/
+      when: ansible_os_family == "RedHat"
+
+    - name: Create the guac extensions, lib, and pref directories (Debian Family)
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0700'
+        owner: tomcat
+        group: tomcat
+      loop:
+        - /usr/share/tomcat9/.guacamole/extensions
+        - /usr/share/tomcat9/.guacamole/lib
+        - /etc/guacamole/
+      when: ansible_os_family == "Debian"
 
     - name: Download MariaDB Java Connector and verify checksum (sha256)
       get_url:
@@ -86,26 +100,45 @@
         dest: /tmp/
         remote_src: yes
 
-    - name: Copy guacamole-auth-jdbc to tomcat9 extenion folder
+    - name: Copy guacamole-auth-jdbc to tomcat9 extenion folder (RedHat Family)
       copy:
         src: /tmp/guacamole-auth-jdbc-{{ guac_ver }}/mysql/guacamole-auth-jdbc-mysql-{{ guac_ver }}.jar
         dest: /usr/share/tomcat9/.guacamole/extensions/
         owner: tomcat9
         group: tomcat9
         mode: '0744'
+      when: ansible_os_family == "RedHat"
 
+    - name: Copy guacamole-auth-jdbc to tomcat9 extenion folder (Debian Family)
+      copy:
+        src: /tmp/guacamole-auth-jdbc-{{ guac_ver }}/mysql/guacamole-auth-jdbc-mysql-{{ guac_ver }}.jar
+        dest: /usr/share/tomcat9/.guacamole/extensions/
+        owner: tomcat
+        group: tomcat
+        mode: '0744'
+      when: ansible_os_family == "Debian"
+        
     - name: Download Guacamole Web App and verify checksum (sha256)
       get_url:
         url: https://apache.org/dyn/closer.lua/guacamole/{{ guac_ver }}/binary/guacamole-{{ guac_ver }}.war?action=download
         dest: /var/lib/tomcat9/webapps/guacamole.war
         checksum: sha256:https://downloads.apache.org/guacamole/{{ guac_ver }}/binary/guacamole-{{ guac_ver }}.war.sha256
 
-    - name: Change Owner of Guacamole Web App
+    - name: Change Owner of Guacamole Web App (RedHat Family)
       file:
         path: /var/lib/tomcat9/webapps/guacamole.war
         owner: tomcat9
         group: tomcat9
         mode: '0744'
+      when: ansible_os_family == "RedHat"
+
+    - name: Change Owner of Guacamole Web App (Debian Family)
+      file:
+        path: /var/lib/tomcat9/webapps/guacamole.war
+        owner: tomcat
+        group: tomcat
+        mode: '0744'
+      when: ansible_os_family == "Debian"
 
     - name: Download Guacamole Server and verify checksum (sha256)
       get_url:
@@ -246,14 +279,23 @@
           mysql-default-max-connections-per-user: 0
           mysql-default-max-group-connections-per-user: 0
 
-    - name: Secure the properties file
+    - name: Secure the properties file (RedHat Family)
       file:
         path: /etc/guacamole/guacamole.properties
         owner: tomcat9
         group: tomcat9
         mode: '0400'
+      when: ansible_os_family == "RedHat"
 
-    - name: Create a symbolic link to guacamole.properties
+    - name: Secure the properties file (Debian Family)
+      file:
+        path: /etc/guacamole/guacamole.properties
+        owner: tomcat
+        group: tomcat
+        mode: '0400'
+      when: ansible_os_family == "Debian"
+
+    - name: Create a symbolic link to guacamole.properties (RedHat Family)
       file:
         src: /etc/guacamole/guacamole.properties
         dest: /usr/share/tomcat9/.guacamole/guacamole.properties
@@ -261,6 +303,17 @@
         group: tomcat9
         state: link
         mode: '0400'
+      when: ansible_os_family == "RedHat"
+
+    - name: Create a symbolic link to guacamole.properties (Debian Family)
+      file:
+        src: /etc/guacamole/guacamole.properties
+        dest: /usr/share/tomcat9/.guacamole/guacamole.properties
+        owner: tomcat
+        group: tomcat
+        state: link
+        mode: '0400'
+      when: ansible_os_family == "Debian"    
 
     - name: Inform SELinux to permit Tomcat to connect to MariaDB
       ansible.posix.seboolean:
