@@ -29,7 +29,6 @@
       - libwebp-dev
       - libtool-bin
       - mariadb-server
-      - libtelnet
       - libtelnet-dev
       - tomcat9
       - policycoreutils-python-utils
