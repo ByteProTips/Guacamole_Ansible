@@ -68,7 +68,8 @@ fi
 if `grep -q -i "Debian GNU" /etc/os-release`
 then
 	echo "Detected Debian"
-	apt install -y git
+	apt install -y git curl
+	curl https://raw.githubusercontent.com/eslam-gomaa/mysql_secure_installation_Ansible/master/library/mysql_secure_installation.py > $DIR/library/mysql_secure_installation.py
 fi
 
 ansible-galaxy collection install community.mysql community.general ansible.posix
