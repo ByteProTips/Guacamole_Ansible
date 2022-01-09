@@ -8,43 +8,5 @@
 - name: Install Dependencies
   package:
     name:
-      - make
-      - rsyslog
-      - python3-pymysql
-      - libcairo2-dev
-      - libwebsockets-dev
-      - libpng-dev
-      - uuid-dev
-      - libavcodec-dev
-      - libavformat-dev
-      - libavutil-dev
-      - libswscale-dev
-      - freerdp2-dev
-      - libpango1.0-dev
-      - libssh2-1-dev
-      - libvncserver-dev
-      - libpulse-dev
-      - libssl-dev
-      - libvorbis-dev
-      - libwebp-dev
-      - libtool-bin
-      - mariadb-server
-      - libtelnet-dev
-      - tomcat9
-      - libguac19
-      - policycoreutils-python-utils
+      - guacd
     state: present
-
-- name: Install Debian Dependencies
-  package:
-    name:
-      - libjpeg62-turbo-dev
-    state: present
-  when: ansible_distribution == 'Debian'
-
-- name: Install Ubuntu Dependencies
-  package:
-    name:
-      - libjpeg-turbo8-dev
-    state: present
-  when: ansible_distribution == 'Ubuntu'
