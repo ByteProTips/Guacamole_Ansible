@@ -16,12 +16,20 @@ then
 	yum install -y ansible
 fi
 
-#Prep RHEL 7/Oracle Linux 7
-if `grep -q -i "release 7" /etc/redhat-release` && `grep -q -i -e '^Red Hat.*release.*' /etc/redhat-release`
+#Prep RHEL 7
+if eval $(grep -q -i "release 7" /etc/redhat-release) && eval $(rpm -qf /etc/redhat-release | grep -q -i 'redhat' /etc/redhat-release`
 then
-	echo "Detected RHEL 7/Oracle Linux 7"
-	subscription-manager repos --enable rhel-7-server-optional-rpms # For RHEL
-	yum-config-manager --enable ol7_optional_latest # For Oracle Linux
+	echo "Detected RHEL 7"
+	subscription-manager repos --enable rhel-7-server-optional-rpms #
+	yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
+	yum install -y ansible
+fi
+
+#Prep Oracle Linux 7
+if eval $(grep -q -i "release 7" /etc/redhat-release) && eval $(rpm -qf /etc/redhat-release | grep -q -i 'oraclelinux' /etc/redhat-release)
+then
+	echo "Detected Oracle Linux 7"
+	yum-config-manager --enable ol7_optional_latest
 	yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
 	yum install -y ansible
 fi
@@ -35,7 +43,7 @@ then
 fi
 
 #Prep RHEL 8
-if `grep -q -i "release 8" /etc/redhat-release` && `rpm -qf /etc/redhat-release | grep -q -i 'redhat' /etc/redhat-release`
+if eval $(grep -q -i "release 8" /etc/redhat-release) && eval $(rpm -qf /etc/redhat-release | grep -q -i 'redhat' /etc/redhat-release`
 then
 	echo "Detected RHEL 8"
 	subscription-manager repos --enable codeready-builder-for-rhel-8-$(arch)-rpms
@@ -45,7 +53,7 @@ then
 fi
 
 #Prep Oracle Linux 8
-if `grep -q -i "release 8" /etc/redhat-release` && $(rpm -qf /etc/redhat-release | grep -q -i 'oraclelinux' /etc/redhat-release)
+if eval $(grep -q -i "release 8" /etc/redhat-release) && eval $(rpm -qf /etc/redhat-release | grep -q -i 'oraclelinux' /etc/redhat-release)
 then
 	echo "Detected Oracle Linux 8"
 	dnf config-manager --set-enabled ol8_codeready_builder # For Oracle Linux
