@@ -19,7 +19,7 @@
       - libavformat-dev
       - libavutil-dev
       - libswscale-dev
-      - freerdp-dev
+      - freerdp2-dev
       - pango-dev
       - libssh2-dev
       - libvncserver-dev
