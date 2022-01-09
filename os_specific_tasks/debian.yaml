@@ -12,7 +12,6 @@
       - rsyslog
       - python3-pymysql
       - libcairo2-dev
-      - libjpeg-turbo-devel
       - libwebsockets-devel
       - libpng-devel
       - uuid-devel
@@ -37,3 +36,17 @@
       - tomcat9
       - policycoreutils-python-utils
     state: present
+
+- name: Install Debian Dependencies
+  package:
+    name:
+      - libjpeg62-turbo-dev
+    state: present
+  when: ansible_distribution == 'Debian'
+
+- name: Install Ubuntu Dependencies
+  package:
+    name:
+      - libjpeg-turbo8-dev
+    state: present
+  when: ansible_distribution == 'Ubuntu'
