@@ -11,7 +11,7 @@
       - make
       - rsyslog
       - python3-pymysql
-      - cairo-devel
+      - libcairo2-dev
       - libjpeg-turbo-devel
       - libwebsockets-devel
       - libpng-devel
