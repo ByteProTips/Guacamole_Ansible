@@ -339,7 +339,15 @@
         state: restarted
 
     - name: Cleanup
-        file:
-          path: /tmp/guacamole-*
-          state: absent
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /tmp/guacamole-auth-jdbc-{{ guac_ver }}
+        - /tmp/guacamole-auth-jdbc-{{ guac_ver }}.tar.gz
+        - /tmp/guacamole-client-{{ guac_ver }}
+        - /tmp/guacamole-client-{{ guac_ver }}.tar.gz
+        - /tmp/guacamole-server-{{ guac_ver }}
+        - /tmp/guacamole-server-{{ guac_ver }}.tar.gz
+
 
