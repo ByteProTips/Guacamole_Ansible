@@ -12,27 +12,27 @@
       - rsyslog
       - python3-pymysql
       - libcairo2-dev
-      - libwebsockets-devel
-      - libpng-devel
-      - uuid-devel
-      - ffmpeg-devel
-      - freerdp-devel
-      - pango-devel
-      - libssh2-devel
-      - libvncserver-devel
-      - libgcrypt-devel
-      - pulseaudio-libs-devel
-      - openssl-devel
-      - libvorbis-devel 
-      - libwebp-devel 
+      - libwebsockets-dev
+      - libpng-dev
+      - uuid-dev
+      - ffmpeg-dev
+      - freerdp-dev
+      - pango-dev
+      - libssh2-dev
+      - libvncserver-dev
+      - libgcrypt-dev
+      - pulseaudio-libs-dev
+      - openssl-dev
+      - libvorbis-dev
+      - libwebp-dev
       - libtool 
-      - libuv-devel 
+      - libuv-dev
       - freerdp
       - mariadb-server
       - wget
       - pkgconfig
       - libtelnet
-      - libtelnet-devel
+      - libtelnet-dev
       - tomcat9
       - policycoreutils-python-utils
     state: present
