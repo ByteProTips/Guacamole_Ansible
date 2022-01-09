@@ -52,10 +52,11 @@
       package_facts:
         manager: "auto"
 
-    - debug: Print Facts
-        var: 
-          - ansible_facts.services
-          - ansible_facts.packages
+    - debug: Print Service Facts
+        var: ansible_facts.services
+
+    - debug: Print Package Facts
+        var: ansible_facts.packages
 
     - name: Open Firewall for Guacamole/Tomcat on 8080/TCP
       firewalld:
