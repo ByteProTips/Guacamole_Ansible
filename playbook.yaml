@@ -145,7 +145,6 @@
         url: https://apache.org/dyn/closer.lua/guacamole/{{ guac_ver }}/source/guacamole-server-{{ guac_ver }}.tar.gz?action=download
         dest: /tmp/guacamole-server-{{ guac_ver }}.tar.gz
         checksum: sha256:https://downloads.apache.org/guacamole/{{ guac_ver }}/source/guacamole-server-{{ guac_ver }}.tar.gz.sha256
-      when: ansible_os_family == "RedHat"
 
     - name: Unarchive Guacamole Server Tarball
       unarchive:
@@ -158,7 +157,6 @@
         url: https://apache.org/dyn/closer.lua/guacamole/{{ guac_ver }}/source/guacamole-client-{{ guac_ver }}.tar.gz?action=download
         dest: /tmp/guacamole-client-{{ guac_ver }}.tar.gz
         checksum: sha256:https://downloads.apache.org/guacamole/{{ guac_ver }}/source/guacamole-client-{{ guac_ver }}.tar.gz.sha256
-      when: ansible_os_family == "RedHat"
 
     - name: Unarchive Guacamole Client Tarball
       unarchive:
@@ -170,7 +168,6 @@
       shell:
         chdir: /tmp/guacamole-server-{{ guac_ver }}
         cmd: ./configure --with-init-dir=/etc/init.d > /tmp/configure.log
-      when: ansible_os_family == "RedHat"
 
     - name: Error Handler for ./configure check
       block:
@@ -205,7 +202,6 @@
             - '.*guacd ...... no.*'
             - '.*guacenc .... no.*'
             - '.*guaclog .... no.*'
-          when: ansible_os_family == "RedHat"
       
       rescue:
         - debug:
@@ -214,13 +210,11 @@
     - name: Build the default target
       community.general.make:
         chdir: /tmp/guacamole-server-{{ guac_ver }}
-      when: ansible_os_family == "RedHat"
 
     - name: Run 'install' target as root
       community.general.make:
         chdir: /tmp/guacamole-server-{{ guac_ver }}
         target: install
-      when: ansible_os_family == "RedHat"
 
     - name: Configure Tomcat9, MariaDB, and GuacD
       service:
