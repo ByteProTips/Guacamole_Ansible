@@ -31,6 +31,7 @@
       - mariadb-server
       - libtelnet-dev
       - tomcat9
+      - libguac19
       - policycoreutils-python-utils
     state: present
 
