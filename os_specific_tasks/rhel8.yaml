@@ -57,7 +57,6 @@
       - libuv-devel 
       - freerdp
       - mariadb-server
-      - wget
       - pkgconfig
       - libtelnet
       - libtelnet-devel
