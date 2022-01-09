@@ -211,10 +211,15 @@
       community.general.make:
         chdir: /tmp/guacamole-server-{{ guac_ver }}
 
-    - name: Run 'install' target as root
+    - name: Run 'install' target
       community.general.make:
         chdir: /tmp/guacamole-server-{{ guac_ver }}
         target: install
+
+    - name: Run ldconfig
+      shell:
+        cmd: ldconfig
+      when: ansible_os_family == "Debian"
 
     - name: Configure Tomcat9, MariaDB, and GuacD
       service:
