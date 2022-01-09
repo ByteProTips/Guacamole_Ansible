@@ -1,6 +1,6 @@
 #!/bin/sh
 # Prep the system to run the Ansible playbook
-# Tested on CentOS 7, RHEL 7, Rocky Linux 8, 
+# Tested on CentOS 7, RHEL 7, Oracle Linux 7, Rocky Linux 8, RHEL 8, Oracle Linux 8
 
 # Determine the location of setup.sh
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -35,7 +35,7 @@ then
 fi
 
 #Prep RHEL 8
-if `grep -q -i "release 8" /etc/redhat-release` && `grep -q -i -e '^Red Hat.*release.*' /etc/redhat-release`
+if `grep -q -i "release 8" /etc/redhat-release` && `rpm -qf /etc/redhat-release | grep -q -i 'redhat' /etc/redhat-release`
 then
 	echo "Detected RHEL 8"
 	subscription-manager repos --enable codeready-builder-for-rhel-8-$(arch)-rpms
@@ -43,6 +43,17 @@ then
 	dnf --enablerepo=epel --setopt=epel.module_hotfixes=true install -y libssh2 libssh2-devel
 	dnf install -y ansible
 fi
+
+#Prep Oracle Linux 8
+if `grep -q -i "release 8" /etc/redhat-release` && `rpm -qf /etc/redhat-release | grep -q -i 'oraclelinux' /etc/redhat-release`
+then
+	echo "Detected Oracle Linux 8"
+	dnf config-manager --set-enabled ol8_codeready_builder # For Oracle Linux
+	dnf install -y oracle-epel-release-el8
+	dnf install -y ansible
+fi
+
+rpm -qf /etc/redhat-release
 
 ansible-galaxy collection install community.mysql community.general ansible.posix
 
