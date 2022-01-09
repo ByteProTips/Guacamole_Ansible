@@ -1,0 +1,39 @@
+# Perform Debian specific setup tasks
+---
+- name: Update system packages
+  package: 
+    name: '*'
+    state: latest
+
+- name: Install Dependencies
+  package:
+    name:
+      - make
+      - rsyslog
+      - python3-PyMySQL
+      - cairo-devel
+      - libjpeg-turbo-devel
+      - libwebsockets-devel
+      - libpng-devel
+      - uuid-devel
+      - ffmpeg-devel
+      - freerdp-devel
+      - pango-devel
+      - libssh2-devel
+      - libvncserver-devel
+      - libgcrypt-devel
+      - pulseaudio-libs-devel
+      - openssl-devel
+      - libvorbis-devel 
+      - libwebp-devel 
+      - libtool 
+      - libuv-devel 
+      - freerdp
+      - mariadb-server
+      - wget
+      - pkgconfig
+      - libtelnet
+      - libtelnet-devel
+      - tomcat9
+      - policycoreutils-python-utils
+    state: present

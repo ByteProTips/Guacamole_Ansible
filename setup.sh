@@ -64,6 +64,13 @@ then
 	dnf install -y ansible
 fi
 
+#Prep Debian
+if `grep -q -i "Debian GNU" /etc/os-release`
+then
+	echo "Detected Debian"
+	apt install -y git
+fi
+
 ansible-galaxy collection install community.mysql community.general ansible.posix
 
 ansible-playbook playbook.yaml

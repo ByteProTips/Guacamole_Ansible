@@ -40,6 +40,10 @@
       include_tasks: os_specific_tasks/rhel8.yaml
       when: (ansible_distribution == 'RedHat' or ansible_distribution == 'OracleLinux') and ansible_distribution_major_version == "8"
 
+    - name: Perform Debian Specific Tasks
+      include_tasks: os_specific_tasks/debian.yaml
+      when: ansible_os_family == "Debian"
+
 #-- End OS Specific Tasks --
 
     - name: Open Firewall for Guacamole/Tomcat on 8080/TCP
