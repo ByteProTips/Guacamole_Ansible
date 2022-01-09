@@ -23,7 +23,6 @@
       hostname:
         name: "guac"
 
-#-- OS Specific Tasks --
     - name: Perform CentOS 7 Specific Tasks
       include_tasks: os_specific_tasks/centos7.yaml
       when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
@@ -44,7 +43,6 @@
       include_tasks: os_specific_tasks/debian.yaml
       when: ansible_os_family == "Debian"
 
-#-- End OS Specific Tasks --
     - name: Populate service facts
       service_facts:
 
@@ -52,13 +50,13 @@
       package_facts:
         manager: "auto"
 
-    - name: Print Service Facts
-      debug:
-        var: ansible_facts.services
+    # - name: Print Service Facts
+    #   debug:
+    #     var: ansible_facts.services
 
-    - name: Print Package Facts
-      debug:
-        var: ansible_facts.packages
+    # - name: Print Package Facts
+    #   debug:
+    #     var: ansible_facts.packages
 
     - name: Open Firewall for Guacamole/Tomcat on 8080/TCP
       firewalld:
@@ -243,9 +241,9 @@
         - "mariadb"
         - "guacd"
     
-# The following tasks ensure MariaDB/MySQL is secure, see the below for reference
-# https://github.com/eslam-gomaa/mysql_secure_installation_Ansible  
 
+    # The following tasks ensure MariaDB/MySQL is secure, see the below for reference
+    # https://github.com/eslam-gomaa/mysql_secure_installation_Ansible  
     - name: Secure MariaDB/MySQL
       mysql_secure_installation:
         login_password: ''
@@ -261,7 +259,7 @@
       no_log: True
       when: ansible_os_family != "Debian" and ansible_distribution_major_version != "11"
 
-    - name: Set MySQL root Password for Debian 11
+    - name: Set MySQL root Password for Debian 11 #Workaround since mysql_secure_installation module is broken on Debian 11
       mysql_user:
         login_user: 'root'
         login_password: '{{ mariadb_root_password }}'
@@ -329,12 +327,19 @@
         name: tomcat_can_network_connect_db
         state: yes
         persistent: yes
-      when: "'selinux' in services"
+      ignore_errors: yes
 
     - name: Set SELinux Context for MariaDB Java Client
       command: restorecon -R -v /etc/guacamole/lib/mariadb-java-client-2.7.3.jar
+      ignore_errors: yes
 
     - name: Restart Tomcat
       service:
         name: tomcat9
         state: restarted
+
+    - name: Cleanup
+        file:
+          path: /tmp/guacamole-*
+          state: absent
+
