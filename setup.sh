@@ -9,7 +9,10 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Download mysql_secure_installation.py for Ansible playbook
 curl https://raw.githubusercontent.com/eslam-gomaa/mysql_secure_installation_Ansible/master/library/mysql_secure_installation.py > $DIR/library/mysql_secure_installation.py
 
-redhat_release=`rpm -qf /etc/redhat-release` 2>/dev/null
+if [ -f "/etc/redhat-release" ]; 
+then
+	redhat_release=`rpm -qf /etc/redhat-release` 2>/dev/null
+fi
 
 #Prep CentOS 7
 if grep -q -i "release 7" /etc/centos-release 2>/dev/null
