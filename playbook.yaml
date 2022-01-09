@@ -1,6 +1,6 @@
 # Configure Apache Guacamole
 # Created by ByteProTips (www.byteprotips.com)
-# Tested on CentOS 7, RHEL 7, Rocky Linux 8, 
+# Tested on CentOS 7, RHEL 7, Oracle Linux 7, Rocky Linux 8, RHEL 8
 ---
 - hosts: localhost
   become: yes
@@ -38,7 +38,7 @@
 
     - name: Perform RHEL 8 Specific Tasks
       include_tasks: os_specific_tasks/rhel8.yaml
-      when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == "8"
+      when: (ansible_distribution == 'RedHat' or ansible_distribution == 'OracleLinux') and ansible_distribution_major_version == "8"
 
 #-- End OS Specific Tasks --
 
