@@ -23,7 +23,7 @@ then
 fi
 
 #Prep RHEL 7
-if `grep -q -i "release 7" /etc/redhat-release` &&  `grep -q 'redhat' <<< $redhat_release`
+if `grep -q -i "release 7" /etc/redhat-release 2>/dev/null` &&  `grep -q 'redhat' <<< $redhat_release`
 then
 	echo "Detected RHEL 7"
 	subscription-manager repos --enable rhel-7-server-optional-rpms #
@@ -32,7 +32,7 @@ then
 fi
 
 #Prep Oracle Linux 7
-if `grep -q -i "release 7" /etc/redhat-release` && `grep -q 'oraclelinux' <<< $redhat_release`
+if `grep -q -i "release 7" /etc/redhat-release 2>/dev/null` && `grep -q 'oraclelinux' <<< $redhat_release`
 then
 	echo "Detected Oracle Linux 7"
 	yum-config-manager --enable ol7_optional_latest
@@ -49,7 +49,7 @@ then
 fi
 
 #Prep RHEL 8
-if `grep -q -i "release 8" /etc/redhat-release` && `grep -q 'redhat' <<< $redhat_release`
+if `grep -q -i "release 8" /etc/redhat-release 2>/dev/null` && `grep -q 'redhat' <<< $redhat_release`
 then
 	echo "Detected RHEL 8"
 	subscription-manager repos --enable codeready-builder-for-rhel-8-$(arch)-rpms
@@ -59,7 +59,7 @@ then
 fi
 
 #Prep Oracle Linux 8
-if `grep -q -i "release 8" /etc/redhat-release` && `grep -q 'oraclelinux' <<< $redhat_release`
+if `grep -q -i "release 8" /etc/redhat-release 2>/dev/null` && `grep -q 'oraclelinux' <<< $redhat_release`
 then
 	echo "Detected Oracle Linux 8"
 	dnf config-manager --set-enabled ol8_codeready_builder # For Oracle Linux
@@ -68,7 +68,7 @@ then
 fi
 
 #Prep Debian
-if `grep -q -i "Debian GNU" /etc/os-release`
+if `grep -q -i "Debian GNU" /etc/os-release 2>/dev/null`
 then
 	echo "Detected Debian"
 	apt install -y git curl
