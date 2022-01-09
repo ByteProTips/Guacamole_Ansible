@@ -18,6 +18,7 @@
     #Do not edit unless you intend to install a newer guacamole release
     guac_ver: "1.4.0"
 
+  tasks:
     - name: Perform CentOS 7 Specific Tasks
       include_tasks: os_specific_tasks/centos7.yaml
       when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
