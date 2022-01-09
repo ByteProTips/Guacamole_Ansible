@@ -48,6 +48,15 @@
     - name: Populate service facts
       service_facts:
 
+    - name: Populate package facts
+      package_facts:
+        manager: "auto"
+
+    - debug:
+      var: 
+        - ansible_facts.services
+        - ansible_facts.packages
+
     - name: Open Firewall for Guacamole/Tomcat on 8080/TCP
       firewalld:
         port: 8080/tcp
