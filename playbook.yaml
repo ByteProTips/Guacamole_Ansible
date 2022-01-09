@@ -249,6 +249,16 @@
       no_log: True
       when: ansible_os_family != "Debian" and ansible_distribution_major_version != "11"
 
+    - name: Set MySQL root Password for Debian 11
+      mysql_user:
+        login_host: 'localhost'
+        login_user: 'root'
+        login_password: ''
+        name: 'root'
+        password: '{{ mariadb_root_password }}'
+        state: present
+      when: ansible_distribution == "Debian" and ansible_distribution_major_version != "11"
+
     - name: Configure MariaDB for Guacamole
       community.mysql.mysql_query:
         login_user: root
