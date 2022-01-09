@@ -52,6 +52,7 @@
         permanent: yes
         state: enabled
         immediate: yes
+      when: 'firewalld' in services"
 
     - name: Create the guac extensions, lib, and pref directories
       file:
