@@ -52,7 +52,7 @@
       package_facts:
         manager: "auto"
 
-    - debug:
+    - debug: Print Facts
       var: 
         - ansible_facts.services
         - ansible_facts.packages
