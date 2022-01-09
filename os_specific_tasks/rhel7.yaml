@@ -37,7 +37,6 @@
       - libpng-devel
       - libuuid-devel
       - ffmpeg-devel
-      - freerdp-devel
       - pango-devel
       - libssh2-devel
       - libvncserver-devel
