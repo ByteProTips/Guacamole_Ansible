@@ -20,19 +20,15 @@
       - libavutil-dev
       - libswscale-dev
       - freerdp2-dev
-      - pango-dev
-      - libssh2-dev
+      - libpango1.0-dev
+      - libssh2-1-dev
       - libvncserver-dev
-      - libgcrypt-dev
-      - pulseaudio-libs-dev
-      - openssl-dev
+      - libpulse-dev
+      - libssl-dev
       - libvorbis-dev
       - libwebp-dev
-      - libtool 
-      - libuv-dev
-      - freerdp
+      - libtool-bin
       - mariadb-server
-      - wget
       - pkgconfig
       - libtelnet
       - libtelnet-dev
