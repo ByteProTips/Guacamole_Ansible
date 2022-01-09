@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Created by ByteProTips (www.byteprotips.com)
 # Prep the system to run the Ansible playbook
 # Tested on CentOS 7, RHEL 7, Oracle Linux 7, Rocky Linux 8, RHEL 8, Oracle Linux 8
