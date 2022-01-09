@@ -18,7 +18,7 @@
       - libavcodec-dev
       - libavformat-dev
       - libavutil-dev
-      - libswsccale-dev
+      - libswscale-dev
       - freerdp-dev
       - pango-dev
       - libssh2-dev
