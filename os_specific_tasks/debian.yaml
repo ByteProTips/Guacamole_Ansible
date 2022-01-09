@@ -10,7 +10,7 @@
     name:
       - make
       - rsyslog
-      - python3-PyMySQL
+      - python3-pymysql
       - cairo-devel
       - libjpeg-turbo-devel
       - libwebsockets-devel
