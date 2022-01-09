@@ -32,11 +32,11 @@
       include_tasks: os_specific_tasks/rhel7.yaml
       when: (ansible_distribution == 'RedHat' or ansible_distribution == 'OracleLinux') and ansible_distribution_major_version == "7"
 
-    - name: Performing v8 of CentOS, Rocky Linux, Oracle Linux, etc. Specific Tasks (but not RHEL 8)
+    - name: Performing v8 of CentOS, Rocky Linux, etc. Specific Tasks (but not RHEL 8 or Oracle Linux)
       include_tasks: os_specific_tasks/centos8.yaml
-      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8" and ansible_distribution != "RedHat"
+      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "8" and ansible_distribution != "RedHat" ansible_distribution != "OracleLinux"
 
-    - name: Perform RHEL 8 Specific Tasks
+    - name: Perform RHEL 8/Oracle Linux Specific Tasks
       include_tasks: os_specific_tasks/rhel8.yaml
       when: (ansible_distribution == 'RedHat' or ansible_distribution == 'OracleLinux') and ansible_distribution_major_version == "8"
 
