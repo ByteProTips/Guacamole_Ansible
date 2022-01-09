@@ -43,7 +43,7 @@ fi
 #Prep CentOS 8, Rocky 8, etc.
 if grep -q -i "release 8" /etc/centos-release 2>/dev/null
 then
-	echo "Detected non Red Hat EL 8 variant (CentOS, Rocky, Oracle, etc)"
+	echo "Detected non Red Hat EL 8 variant (CentOS, Rocky, etc)"
 	dnf install -y epel-release
 	dnf install -y ansible
 fi
