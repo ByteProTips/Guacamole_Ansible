@@ -64,9 +64,9 @@
         owner: tomcat9
         group: tomcat9
       loop:
-        - /usr/share/tomcat9/.guacamole/extensions
-        - /usr/share/tomcat9/.guacamole/lib
         - /etc/guacamole/
+        - /etc/guacamole/extensions
+        - /etc/guacamole/lib
       when: ansible_os_family == "RedHat"
 
     - name: Create the guac extensions, lib, and pref directories (Debian Family)
@@ -77,15 +77,15 @@
         owner: tomcat
         group: tomcat
       loop:
-        - /usr/share/tomcat9/.guacamole/extensions
-        - /usr/share/tomcat9/.guacamole/lib
+        - /etc/guacamole/extensions
+        - /etc/guacamole/lib
         - /etc/guacamole/
       when: ansible_os_family == "Debian"
 
     - name: Download MariaDB Java Connector and verify checksum (sha256)
       get_url:
         url: https://downloads.mariadb.com/Connectors/java/connector-java-2.7.3/mariadb-java-client-2.7.3.jar
-        dest: /usr/share/tomcat9/.guacamole/lib/
+        dest: /etc/guacamole/lib/
         checksum: sha256:https://downloads.mariadb.com/Connectors/java/connector-java-2.7.3/sha256sums.txt
 
     - name: Download guacamole-auth-jdbc extension and verify checksum (sha256)
@@ -103,7 +103,7 @@
     - name: Copy guacamole-auth-jdbc to tomcat9 extenion folder (RedHat Family)
       copy:
         src: /tmp/guacamole-auth-jdbc-{{ guac_ver }}/mysql/guacamole-auth-jdbc-mysql-{{ guac_ver }}.jar
-        dest: /usr/share/tomcat9/.guacamole/extensions/
+        dest: /etc/guacamole/extensions/
         owner: tomcat9
         group: tomcat9
         mode: '0744'
@@ -112,7 +112,7 @@
     - name: Copy guacamole-auth-jdbc to tomcat9 extenion folder (Debian Family)
       copy:
         src: /tmp/guacamole-auth-jdbc-{{ guac_ver }}/mysql/guacamole-auth-jdbc-mysql-{{ guac_ver }}.jar
-        dest: /usr/share/tomcat9/.guacamole/extensions/
+        dest: /etc/guacamole/extensions/
         owner: tomcat
         group: tomcat
         mode: '0744'
@@ -252,7 +252,9 @@
     - name: Set MySQL root Password for Debian 11
       mysql_user:
         login_user: 'root'
+        login_password: '{{ mariadb_root_password }}'
         login_unix_socket: /var/run/mysqld/mysqld.sock
+        check_implicit_admin: yes
         name: 'root'
         password: '{{ mariadb_root_password }}'
         state: present
@@ -310,34 +312,15 @@
         mode: '0400'
       when: ansible_os_family == "Debian"
 
-    - name: Create a symbolic link to guacamole.properties (RedHat Family)
-      file:
-        src: /etc/guacamole/guacamole.properties
-        dest: /usr/share/tomcat9/.guacamole/guacamole.properties
-        owner: tomcat9
-        group: tomcat9
-        state: link
-        mode: '0400'
-      when: ansible_os_family == "RedHat"
-
-    - name: Create a symbolic link to guacamole.properties (Debian Family)
-      file:
-        src: /etc/guacamole/guacamole.properties
-        dest: /usr/share/tomcat9/.guacamole/guacamole.properties
-        owner: tomcat
-        group: tomcat
-        state: link
-        mode: '0400'
-      when: ansible_os_family == "Debian"    
-
     - name: Inform SELinux to permit Tomcat to connect to MariaDB
       ansible.posix.seboolean:
         name: tomcat_can_network_connect_db
         state: yes
         persistent: yes
+      when: "'selinux' in services"
 
     - name: Set SELinux Context for MariaDB Java Client
-      command: restorecon -R -v /usr/share/tomcat9/.guacamole/lib/mariadb-java-client-2.7.3.jar
+      command: restorecon -R -v /etc/guacamole/lib/mariadb-java-client-2.7.3.jar
 
     - name: Restart Tomcat
       service:
