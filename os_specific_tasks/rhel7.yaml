@@ -56,4 +56,6 @@
       - tomcat9
       - policycoreutils-python
       - python2-PyMySQL
+      - freerdp-devel
+      - libssh2-devel
     state: present
