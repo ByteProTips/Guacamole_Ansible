@@ -1,6 +1,6 @@
 # Configure Apache Guacamole
 # Created by ByteProTips (www.byteprotips.com)
-# Tested on CentOS 7
+# Tested on CentOS 7, RHEL 7, Rocky Linux 8, 
 ---
 - hosts: localhost
   become: yes
@@ -24,13 +24,13 @@
         name: "guac"
 
 #-- OS Specific Tasks --
-    - name: Perform CentOS 7, Springdale 7, Oracle 7 etc. Specific Tasks
+    - name: Perform CentOS 7 Specific Tasks
       include_tasks: os_specific_tasks/centos7.yaml
-      when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7" and ansible_distribution != "RedHat"
+      when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
 
-    - name: Perform RHEL 7 Specific Tasks
+    - name: Perform RHEL 7/Oracle Linux 7 Specific Tasks
       include_tasks: os_specific_tasks/rhel7.yaml
-      when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == "7"
+      when: (ansible_distribution == 'RedHat' or ansible_distribution == 'OracleLinux') and ansible_distribution_major_version == "7"
 
     - name: Performing v8 of CentOS, Rocky Linux, Oracle Linux, etc. Specific Tasks (but not RHEL 8)
       include_tasks: os_specific_tasks/centos8.yaml

@@ -1,5 +1,6 @@
 #!/bin/sh
 # Prep the system to run the Ansible playbook
+# Tested on CentOS 7, RHEL 7, Rocky Linux 8, 
 
 # Determine the location of setup.sh
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -18,16 +19,16 @@ fi
 #Prep RHEL 7
 if `grep -q -i "release 7" /etc/redhat-release` && `grep -q -i -e '^Red Hat.*release.*' /etc/redhat-release`
 then
-	echo "Detected RHEL 7"
+	echo "Detected RHEL 7/Oracle Linux 7"
 	subscription-manager repos --enable rhel-7-server-optional-rpms
 	yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
 	yum install -y ansible
 fi
 
-#Prep CentOS 8
+#Prep CentOS 8, Rocky 8, etc.
 if grep -q -i "release 8" /etc/centos-release 2>/dev/null
 then
-	echo "Detected CentOS 8"
+	echo "Detected non Red Hat EL 8 variant (CentOS, Rocky, Oracle, etc)"
 	dnf install -y epel-release
 	dnf install -y ansible
 fi

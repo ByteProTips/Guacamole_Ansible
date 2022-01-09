@@ -1,4 +1,4 @@
-# Perform v8 of CentOS, Rocky, Alma, etc. specific setup tasks
+# Perform RHEL8 specific setup tasks
 ---
 - name: Import RPM Fusion (Free) GPG key for EL8
   rpm_key:
