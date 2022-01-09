@@ -64,8 +64,6 @@ then
 	dnf install -y ansible
 fi
 
-rpm -qf /etc/redhat-release
-
 ansible-galaxy collection install community.mysql community.general ansible.posix
 
 ansible-playbook playbook.yaml
