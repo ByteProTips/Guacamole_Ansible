@@ -1,6 +1,6 @@
 # Configure Apache Guacamole
 # Created by ByteProTips (www.byteprotips.com)
-# Tested on CentOS 7, RHEL 7, Oracle Linux 7, Rocky Linux 8, RHEL 8, Oracle Linux 8
+# Tested on CentOS 7, RHEL 7, Oracle Linux 7, Rocky Linux 8, RHEL 8, Oracle Linux 8, Debian 11
 ---
 - hosts: localhost
   become: yes
@@ -17,11 +17,6 @@
   vars:
     #Do not edit unless you intend to install a newer guacamole release
     guac_ver: "1.4.0"
-
-  tasks:
-    - name: Set Hostname
-      hostname:
-        name: "guac"
 
     - name: Perform CentOS 7 Specific Tasks
       include_tasks: os_specific_tasks/centos7.yaml
