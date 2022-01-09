@@ -16,11 +16,12 @@ then
 	yum install -y ansible
 fi
 
-#Prep RHEL 7
+#Prep RHEL 7/Oracle Linux 7
 if `grep -q -i "release 7" /etc/redhat-release` && `grep -q -i -e '^Red Hat.*release.*' /etc/redhat-release`
 then
 	echo "Detected RHEL 7/Oracle Linux 7"
-	subscription-manager repos --enable rhel-7-server-optional-rpms
+	subscription-manager repos --enable rhel-7-server-optional-rpms # For RHEL
+	yum-config-manager --enable ol7_optional_latest # For Oracle Linux
 	yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
 	yum install -y ansible
 fi
