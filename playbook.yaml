@@ -45,7 +45,9 @@
       when: ansible_os_family == "Debian"
 
 #-- End OS Specific Tasks --
-
+    - name: Populate service facts
+      service_facts:
+        
     - name: Open Firewall for Guacamole/Tomcat on 8080/TCP
       firewalld:
         port: 8080/tcp
