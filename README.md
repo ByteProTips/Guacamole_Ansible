@@ -17,5 +17,5 @@
 - Oracle Linux 7
 - Oracle Linux 8
 - Debian 11
-
+- Ubuntu 20.04
 
