@@ -1,6 +1,6 @@
 # Configure Apache Guacamole
 # Created by ByteProTips (www.byteprotips.com)
-# Tested on CentOS 7, RHEL 7, Oracle Linux 7, Rocky Linux 8, RHEL 8, Oracle Linux 8, Debian 11
+# Tested on CentOS 7, RHEL 7, Oracle Linux 7, Rocky Linux 8, RHEL 8, Oracle Linux 8, Debian 11, Ubuntu 20.04
 ---
 - hosts: localhost
   become: yes
@@ -345,5 +345,3 @@
         - /tmp/guacamole-client-{{ guac_ver }}.tar.gz
         - /tmp/guacamole-server-{{ guac_ver }}
         - /tmp/guacamole-server-{{ guac_ver }}.tar.gz
-
-

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Created by ByteProTips (www.byteprotips.com)
 # Prep the system to run the Ansible playbook
-# Tested on CentOS 7, RHEL 7, Oracle Linux 7, Rocky Linux 8, RHEL 8, Oracle Linux 8, Debian 11
+# Tested on CentOS 7, RHEL 7, Oracle Linux 7, Rocky Linux 8, RHEL 8, Oracle Linux 8, Debian 11, Ubuntu 20.04
 
 #Ensure script is being run as root.
 if [ "$EUID" -ne 0 ]
@@ -82,9 +82,9 @@ then
 	#Special step for Ubuntu
 	if `grep -q -i "DISTRIB_ID=Ubuntu" /etc/lsb-release 2>/dev/null`
 	then
-		apt install software-properties-common
+		apt install -y software-properties-common
 		add-apt-repository --yes --update ppa:ansible/ansible
-		apt install ansible
+		apt install -y ansible
 	fi
 fi
 
