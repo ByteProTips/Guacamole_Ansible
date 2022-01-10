@@ -3,6 +3,12 @@
 # Prep the system to run the Ansible playbook
 # Tested on CentOS 7, RHEL 7, Oracle Linux 7, Rocky Linux 8, RHEL 8, Oracle Linux 8, Debian 11
 
+#Ensure script is being run as root.
+if [ "$EUID" -ne 0 ]
+  then echo "Please try running setup.sh again as root/sudo"
+  exit
+fi
+
 # Determine the location of setup.sh
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -73,6 +79,12 @@ then
 	echo "Detected Debian/Debian Like Distro"
 	apt install -y git curl ansible
 	curl https://raw.githubusercontent.com/eslam-gomaa/mysql_secure_installation_Ansible/master/library/mysql_secure_installation.py > $DIR/library/mysql_secure_installation.py
+	#Special step for Ubuntu
+	if `grep -q -i "DISTRIB_ID=Ubuntu" /etc/lsb-release 2>/dev/null`
+		apt install software-properties-common
+		add-apt-repository --yes --update ppa:ansible/ansible
+		apt install ansible
+	fi
 fi
 
 ansible-galaxy collection install community.mysql community.general ansible.posix
