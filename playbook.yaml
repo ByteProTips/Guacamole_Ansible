@@ -37,7 +37,7 @@
 
     - name: Perform Debian Specific Tasks
       include_tasks: os_specific_tasks/debian.yaml
-      when: ansible_os_family == "Debian"
+      when: ansible_os_family == 'Debian'
 
     - name: Populate service facts
       service_facts:
@@ -253,7 +253,7 @@
         remove_test_db: true
       register: mysql_secure
       no_log: True
-      when: ansible_os_family != "Debian" and ansible_distribution_major_version != "11"
+      when: ansible_os_family != "Debian" or ansible_distribution_major_version != "11"
 
     - name: Set MySQL root Password for Debian 11 #Workaround since mysql_secure_installation module is broken on Debian 11
       mysql_user:
