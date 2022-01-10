@@ -81,6 +81,7 @@ then
 	curl https://raw.githubusercontent.com/eslam-gomaa/mysql_secure_installation_Ansible/master/library/mysql_secure_installation.py > $DIR/library/mysql_secure_installation.py
 	#Special step for Ubuntu
 	if `grep -q -i "DISTRIB_ID=Ubuntu" /etc/lsb-release 2>/dev/null`
+	then
 		apt install software-properties-common
 		add-apt-repository --yes --update ppa:ansible/ansible
 		apt install ansible
