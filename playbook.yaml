@@ -214,11 +214,11 @@
             msg: "Something went wrong with ./configure.  Check the log file located at /tmp/configure.log"
 
     - name: Build the default target
-      community.general.make:
+      make:
         chdir: /tmp/guacamole-server-{{ guac_ver }}
 
     - name: Run 'install' target
-      community.general.make:
+      make:
         chdir: /tmp/guacamole-server-{{ guac_ver }}
         target: install
 
