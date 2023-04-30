@@ -54,6 +54,7 @@
       - libtelnet
       - libtelnet-devel
       - tomcat9
+      - tomcat-native
       - policycoreutils-python
       - python2-PyMySQL
     state: present
